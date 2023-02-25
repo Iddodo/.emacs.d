@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: trace
+# key: trace
+# group: math
+# condition: (and (texmathp) 'auto)
+# --
+\\trace

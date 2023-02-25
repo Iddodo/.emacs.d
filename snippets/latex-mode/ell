@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: ell
+# key: ell
+# condition: (and (texmathp) 'auto)
+# --
+\ell

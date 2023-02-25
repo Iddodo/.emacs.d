@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: StatusType_INVALID_INPUT
+# key: invalid
+# --
+StatusType::INVALID_INPUT;

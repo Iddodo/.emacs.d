@@ -1,0 +1,561 @@
+(require 'package) ;; Emacs builtin
+
+;; set package.el repositories
+(setq package-archives
+'(
+   ("org" . "https://orgmode.org/elpa/")
+   ("gnu" . "https://elpa.gnu.org/packages/")
+   ("melpa" . "https://melpa.org/packages/")
+))
+
+;; initialize built-in package management
+(package-initialize)
+
+;; update packages list if we are on a new install
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; a list of pkgs to programmatically install
+;; ensure installed via package.el
+(setq my-package-list '(use-package))
+
+;; programmatically install/ensure installed
+;; pkgs in your personal list
+(dolist (package my-package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+;; Basic
+(setq user-full-name "Ido Merenstein"
+      user-mail-address "m.ido@campus.technion.ac.il")
+
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-outrun-electric t))
+
+(custom-set-faces
+ '(ivy-current-match
+   ((((class color) (background light))
+     :background "red" :foreground "white")
+    (((class color) (background dark))
+     :background "#6F1AB6" :foreground "#FFA3FD"))))
+
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(setq recentf-max-saved-items 25)
+
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+
+(setenv "PATH" (shell-command-to-string "echo -n $PATH"))
+
+;; (add-hook 'org-mode-hook #'org-fragtog-mode)
+
+(setq org-directory "~/org/")
+
+(add-hook
+'org-mode-hook #'turn-on-org-cdlatex)
+
+;; (add-hook 'org-mode-hook #'org-fragtog-mode)
+
+(use-package org-bullets
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(custom-set-faces
+  '(org-level-1 ((t (:inherit outline-1 :height 1.5))))
+  '(org-level-2 ((t (:inherit outline-2 :height 1.4))))
+  '(org-level-3 ((t (:inherit outline-3 :height 1.3))))
+  '(org-level-4 ((t (:inherit outline-4 :height 1.2))))
+  '(org-level-5 ((t (:inherit outline-5 :height 1.1))))
+)
+
+;; https://systemcrafters.cc/emacs-from-scratch/key-bindings-and-evil/
+(defun rune/evil-hook ()
+  (dolist (mode '(custom-mode
+		  eshell-mode
+		  git-rebase-mode
+		  erc-mode
+		  circe-server-mode
+		  circe-chat-mode
+		  circe-query-mode
+		  sauron-mode
+		  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode)))
+
+
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  (setq evil-overriding-maps nil)
+  (require 'evil)
+  :hook (evil-mode . rune/evil-hook)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+  (evil-set-undo-system 'undo-redo)
+
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+  (use-package evil-collection
+  :after evil
+  :ensure t
+  :custom
+  (evil-collection-setup-minibuffer t)
+  :config
+  (evil-collection-init))
+
+(use-package counsel
+  :after ivy
+  :config (counsel-mode))
+
+(use-package ivy
+  :defer 0.1
+  :diminish
+  :bind (("C-c C-r" . ivy-resume)
+         ("C-x B" . ivy-switch-buffer-other-window))
+  :custom
+  (ivy-count-format "(%d/%d) ")
+  (ivy-use-virtual-buffers t)
+  :config (ivy-mode))
+
+;;(use-package ivy-rich
+  ;;:after ivy
+  ;;:custom
+  ;;(ivy-virtual-abbreviate 'full
+                          ;;ivy-rich-switch-buffer-align-virtual-buffer t
+                          ;;ivy-rich-path-style 'abbrev)
+  ;;:config
+  ;;(ivy-set-display-transformer 'ivy-switch-buffer
+                               ;;'ivy-rich-switch-buffer-transformer))
+
+(use-package swiper
+  :after ivy
+  :bind (("C-s" . swiper)
+         ("C-r" . swiper)))
+
+(setq ivy-height-alist
+      '((t
+         lambda (_caller)
+         (/ (frame-height) 1.5))))
+
+(use-package avy
+  :ensure t
+  :config
+  (require 'avy))
+
+(setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+
+(use-package yasnippet
+  :ensure t
+  :hook ((LaTeX-mode . yas-minor-mode)
+	 (post-self-insert . my/yas-try-expanding-auto-snippets))
+  :config
+  (require 'yasnippet)
+  (yas-global-mode 1)
+  (use-package warnings
+    :config
+    (cl-pushnew '(yasnippet backquote-change)
+		warning-suppress-types
+		:test 'equal))
+
+  (setq yas-triggers-in-field t)
+
+  ;; Function that tries to autoexpand YaSnippets
+  ;; The double quoting is NOT a typo!
+  (defun my/yas-try-expanding-auto-snippets ()
+    (when (and (boundp 'yas-minor-mode) yas-minor-mode)
+      (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+	(yas-expand)))))
+
+;; Try after every insertion
+(add-hook 'post-self-insert-hook #'my/yas-try-expanding-auto-snippets)
+
+;; YaSnippet complains if we use a snippet to edit the buffer directly,
+;; as we do with the above examples of wrapping symbols in \hat{}, etc. This is probably bad practice, but I haven’t had an issue yet. I suppress these warnings with
+
+(with-eval-after-load 'warnings
+  (cl-pushnew '(yasnippet backquote-change) warning-suppress-types
+              :test 'equal))
+
+(use-package magit
+  :ensure t)
+
+(add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
+
+;; Set default TeX engine to XeTeX
+(setq-default TeX-engine 'xetex)
+
+(setq TeX-PDF-mode t)
+
+(add-hook 'LaTeX-mode-hook #'evil-tex-mode)
+
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install)
+  (with-eval-after-load 'pdf-view 
+      (define-key pdf-view-mode-map (kbd "SPC") nil)))
+
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+
+;; AucTeX settings - almost no changes
+  (use-package latex
+    :ensure auctex
+    :hook ((LaTeX-mode . prettify-symbols-mode))
+    :bind (:map LaTeX-mode-map
+	   ("C-S-e" . latex-math-from-calc))
+    :config
+    ;; Format math as a Latex string with Calc
+    (defun latex-math-from-calc ()
+      "Evaluate `calc' on the contents of line at point."
+      (interactive)
+      (cond ((region-active-p)
+	     (let* ((beg (region-beginning))
+		    (end (region-end))
+		    (string (buffer-substring-no-properties beg end)))
+	       (kill-region beg end)
+	       (insert (calc-eval `(,string calc-language latex
+					    calc-prefer-frac t
+					    calc-angle-mode rad)))))
+	    (t (let ((l (thing-at-point 'line)))
+		 (end-of-line 1) (kill-line 0)
+		 (insert (calc-eval `(,l
+				      calc-language latex
+				      calc-prefer-frac t
+				      calc-angle-mode rad))))))))
+
+  (use-package preview
+    :after latex
+    :hook ((LaTeX-mode . preview-larger-previews))
+    :config
+    (defun preview-larger-previews ()
+      (setq preview-scale-function
+	    (lambda () (* 1.25
+		     (funcall (preview-scale-from-face)))))))
+
+  ;; CDLatex settings
+(use-package cdlatex
+  :ensure t
+  :hook (LaTeX-mode . turn-on-cdlatex)
+  :bind (:map cdlatex-mode-map 
+	      ("<tab>" . cdlatex-tab)))
+
+(defun flip-hebrew ()
+  (setq bidi-display-reordering nil))
+
+(defun prettify-latex-symbols ()
+  (interactive)
+   "Prettify LaTex parenthesis"
+   (push '("\\left[ " .  "【") prettify-symbols-alist)
+   (push '(" \\right]" . "】" ) prettify-symbols-alist)
+   (push '("\\left( " .  "(") prettify-symbols-alist)
+   (push '(" \\right)" . ")" ) prettify-symbols-alist)
+   (push '("\\left| " .  "|") prettify-symbols-alist)
+   (push '(" \\right|" . "|" ) prettify-symbols-alist)
+
+   (push '("\\left[".  "[") prettify-symbols-alist)
+   (push '("\\right]" ."]" ) prettify-symbols-alist)
+   (push '("\\left(".  "(") prettify-symbols-alist)
+   (push '("\\right)" .")" ) prettify-symbols-alist)
+   (push '("\\left|".  "|") prettify-symbols-alist)
+   (push '("\\right|" ."|" ) prettify-symbols-alist)
+
+   (push '(" \\left\( ".  "(") prettify-symbols-alist)
+
+   (push '("\\left{ " .  "⎨") prettify-symbols-alist)
+   (push '(" \\right}" . "⎬" ) prettify-symbols-alist)
+
+   (push '("\\left{".  "⎨") prettify-symbols-alist)
+   (push '("\\right}" ."⎬" ) prettify-symbols-alist)
+
+   (push '("\\left\\{".  "⎨") prettify-symbols-alist)
+   (push '("\\right\\}" ."⎬" ) prettify-symbols-alist)
+
+   (push '("\\left< ".  "<") prettify-symbols-alist)
+   (push '(" \\right>" .">" ) prettify-symbols-alist)
+
+   (push '("\\frac{" ."{" ) prettify-symbols-alist)
+   (push '("$" ."ﾟ" ) prettify-symbols-alist)
+   (push '("\\Delta " ."Δ" ) prettify-symbols-alist)
+   (push '("\\mathrm{d}" ."d") prettify-symbols-alist)
+
+   (push '("\\coloneqq" ."≔") prettify-symbols-alist)
+
+   (push '("\\mathbb{C}" ."ℂ") prettify-symbols-alist)
+
+   (push '("\\divides" ."|") prettify-symbols-alist)
+
+   (push '("\\sqrt" ."√") prettify-symbols-alist)
+
+   (prettify-symbols-mode))
+
+;; CDLatex integration with YaSnippet: Allow cdlatex tab to work inside Yas
+;; fields
+(use-package cdlatex
+  :hook ((cdlatex-tab . yas-expand)
+         (cdlatex-tab . cdlatex-in-yas-field)))
+
+  (use-package yasnippet
+    :bind (:map yas-keymap
+           ("<tab>" . yas-next-field-or-cdlatex)
+           ("TAB" . yas-next-field-or-cdlatex))
+    :config
+    (defun cdlatex-in-yas-field ()
+      ;; Check if we're at the end of the Yas field
+      (when-let* ((_ (overlayp yas--active-field-overlay))
+                  (end (overlay-end yas--active-field-overlay)))
+        (if (>= (point) end)
+            ;; Call yas-next-field if cdlatex can't expand here
+            (let ((s (thing-at-point 'sexp)))
+              (unless (and s (assoc (substring-no-properties s)
+                                    cdlatex-command-alist-comb))
+                (yas-next-field-or-maybe-expand)
+                t))
+          ;; otherwise expand and jump to the correct location
+          (let (cdlatex-tab-hook minp)
+            (setq minp
+                  (min (save-excursion (cdlatex-tab)
+                                       (point))
+                       (overlay-end yas--active-field-overlay)))
+            (goto-char minp) t)))))
+
+    (defun yas-next-field-or-cdlatex nil
+      (interactive)
+      "Jump to the next Yas field correctly with cdlatex active."
+      (if
+          (or (bound-and-true-p cdlatex-mode)
+              (bound-and-true-p org-cdlatex-mode))
+          (cdlatex-tab)
+        (yas-next-field-or-maybe-expand)))
+
+;; Array/tabular input with org-tables and cdlatex
+(use-package org-table
+  :after cdlatex
+  :bind (:map orgtbl-mode-map
+              ("<tab>" . lazytab-org-table-next-field-maybe)
+              ("TAB" . lazytab-org-table-next-field-maybe))
+  :init
+  (add-hook 'cdlatex-tab-hook 'lazytab-cdlatex-or-orgtbl-next-field 90)
+  ;; Tabular environments using cdlatex
+  (add-to-list 'cdlatex-command-alist '("smat" "Insert smallmatrix env"
+                                       "\\left( \\begin{smallmatrix} ? \\end{smallmatrix} \\right)"
+                                       lazytab-position-cursor-and-edit
+                                       nil nil t))
+  (add-to-list 'cdlatex-command-alist '("bmat" "Insert bmatrix env"
+                                       "\\begin{bmatrix} ? \\end{bmatrix}"
+                                       lazytab-position-cursor-and-edit
+                                       nil nil t))
+  (add-to-list 'cdlatex-command-alist '("pmat" "Insert pmatrix env"
+                                       "\\begin{pmatrix} ? \\end{pmatrix}"
+                                       lazytab-position-cursor-and-edit
+                                       nil nil t))
+  (add-to-list 'cdlatex-command-alist '("tbl" "Insert table"
+                                        "\\begin{table}\n\\centering ? \\caption{}\n\\end{table}\n"
+                                       lazytab-position-cursor-and-edit
+                                       nil t nil))
+  :config
+  ;; Tab handling in org tables
+  (defun lazytab-position-cursor-and-edit ()
+    ;; (if (search-backward "\?" (- (point) 100) t)
+    ;;     (delete-char 1))
+    (cdlatex-position-cursor)
+    (lazytab-orgtbl-edit))
+
+  (defun lazytab-orgtbl-edit ()
+    (advice-add 'orgtbl-ctrl-c-ctrl-c :after #'lazytab-orgtbl-replace)
+    (orgtbl-mode 1)
+    (open-line 1)
+    (insert "\n|"))
+
+  (defun lazytab-orgtbl-replace (_)
+    (interactive "P")
+    (unless (org-at-table-p) (user-error "Not at a table"))
+    (let* ((table (org-table-to-lisp))
+           params
+           (replacement-table
+            (if (texmathp)
+                (lazytab-orgtbl-to-amsmath table params)
+              (orgtbl-to-latex table params))))
+      (kill-region (org-table-begin) (org-table-end))
+      (open-line 1)
+      (push-mark)
+      (insert replacement-table)
+      (align-regexp (region-beginning) (region-end) "\\([:space:]*\\)& ")
+      (orgtbl-mode -1)
+      (advice-remove 'orgtbl-ctrl-c-ctrl-c #'lazytab-orgtbl-replace)))
+
+  (defun lazytab-orgtbl-to-amsmath (table params)
+    (orgtbl-to-generic
+     table
+     (org-combine-plists
+      '(:splice t
+                :lstart ""
+                :lend " \\\\"
+                :sep " & "
+                :hline nil
+                :llend "")
+      params)))
+
+  (defun lazytab-cdlatex-or-orgtbl-next-field ()
+    (when (and (bound-and-true-p orgtbl-mode)
+               (org-table-p)
+               (looking-at "[[:space:]]*\\(?:|\\|$\\)")
+               (let ((s (thing-at-point 'sexp)))
+                 (not (and s (assoc s cdlatex-command-alist-comb)))))
+      (call-interactively #'org-table-next-field)
+      t))
+
+  (defun lazytab-org-table-next-field-maybe ()
+    (interactive)
+    (if (bound-and-true-p cdlatex-mode)
+        (cdlatex-tab)
+      (org-table-next-field))))
+
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-compilation-finished-functions
+           #'TeX-revert-document-buffer)
+
+(add-hook 'LaTeX-mode-hook #'evil-tex-mode)
+
+;; Turn on prettify-symbols for nicer LaTeX editting
+(add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
+
+(defun my-tex-hook ()
+  (flip-hebrew)
+  (prettify-latex-symbols))
+
+(add-hook 'LaTeX-mode-hook 'my-tex-hook)
+
+(add-hook 'plain-TeX-mode-hook 'my-tex-hook)
+
+(add-hook 'AmS-TeX-mode-hook 'my-tex-hook)
+
+(add-hook 'ConTeXt-mode-hook 'my-tex-hook)
+
+(add-hook 'Texinfo-mode-hook 'my-tex-hook)
+
+(add-hook 'docTeX-mode-hook 'my-tex-hook)
+
+;; set leader key in normal state
+(evil-set-leader nil (kbd "SPC"))
+
+;; Leap.nvim like motion (avy-goto-char-2)
+
+(evil-define-key 'normal 'global (kbd "s") #'evil-avy-goto-char-2)
+
+;; Basic movement keybindings
+(evil-define-key 'normal 'global (kbd "<leader>:") 'execute-extended-command)
+(evil-define-key 'normal 'global (kbd "<leader>.") 'counsel-find-file)
+(evil-define-key 'normal 'global (kbd "<leader>;") 'eval-expression)
+
+(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>fr") 'counsel-recentf)
+
+(evil-define-key 'normal 'global (kbd "<leader>fp") (lambda()
+						      (interactive)
+						      (ivy-read
+						      "~/.emacs.d/"
+						      #'read-file-name-internal
+						      :matcher #'counsel--find-file-matcher)))
+
+;; Source: https://www.emacswiki.org/emacs/misc-cmds.el
+(defun revert-buffer-no-confirm ()
+    "Revert buffer without confirmation."
+    (interactive)
+    (revert-buffer :ignore-auto :noconfirm))
+
+;; Source: https://emacs.stackexchange.com/questions/53196/how-to-quickly-revert-the-buffer
+(defun reload-file-preserve-point ()
+  (interactive)
+  (when (or (not (buffer-modified-p))
+            (y-or-n-p "Reverting will discard changes. Proceed?"))
+    (save-excursion
+      (revert-buffer t t t))
+    (setq buffer-undo-list nil)
+    (message "Buffer reverted")))
+
+(evil-define-key 'normal 'global (kbd "<leader>bk") 'kill-this-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>bp") 'previous-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>bn") 'next-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>br") 'reload-file-preserve-point)
+
+(defun split-window-move-right()
+  (interactive)
+  (split-window-right)
+  (windmove-right))
+
+(evil-define-key 'normal 'global (kbd "<leader>wV") 'split-window-move-right)
+(evil-define-key 'normal 'global (kbd "<leader>wc") 'delete-window)
+(evil-define-key 'normal 'global (kbd "<leader>wl") 'windmove-right)
+(evil-define-key 'normal 'global (kbd "<leader>wh") 'windmove-left)
+(evil-define-key 'normal 'global (kbd "<leader>wk") 'windmove-up)
+(evil-define-key 'normal 'global (kbd "<leader>wj") 'windmove-down)
+
+
+;; Dired Keybindings
+(evil-define-key 'normal 'global (kbd "<leader>dj") #'dired-jump)
+(evil-define-key 'normal 'global (kbd "<leader>dp") #'peep-dired)
+(evil-define-key 'normal 'global (kbd "<leader>dv") #'dired-view-file)
+
+(defun macos/open-in-new-kitty-window ()
+  (interactive)
+  (shell-command "open -a kitty $PWD" nil nil))
+
+(evil-define-key 'normal 'global (kbd "<leader>ok") #'macos/open-in-new-kitty-window)
+
+(evil-define-key 'normal 'global (kbd "<leader>gg") 'magit-status)
+
+(evil-define-key 'normal dired-mode-map
+  (kbd "M-RET") 'dired-display-file
+  (kbd "h") 'dired-up-directory
+  (kbd "l") 'dired-find-file
+  (kbd "m") 'dired-mark
+  (kbd "t") 'dired-toggle-marks
+  (kbd "u") 'dired-unmark
+  (kbd "C") 'dired-do-copy
+  (kbd "D") 'dired-do-delete
+  (kbd "J") 'dired-goto-file
+  (kbd "M") 'dired-do-chmod
+  (kbd "O") 'dired-do-chown
+  (kbd "P") 'dired-do-print
+  (kbd "R") 'dired-do-rename
+  (kbd "T") 'dired-do-touch
+  ;;(kbd "Y") 'dired-copy-filenamecopy
+  (kbd "Z") 'dired-do-compress
+  (kbd "+") 'dired-create-directory
+  (kbd "-") 'dired-up-directory
+
+  ;; This makes the evil leader key work in dired
+  (kbd "SPC") nil
+  )
+
+(use-package org-auto-tangle
+	:ensure t
+	:defer t
+	:hook (org-mode)
+	:config
+	(setq org-auto-tangle-default t))
+
+(use-package toc-org
+  :ensure t
+  :hook (org-mode))
+;;(add-hook 'org-mode-hook 'toc-org-mode)

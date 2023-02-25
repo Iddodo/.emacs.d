@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: StatusType_ALLOCATION_ERORR
+# key: alloc
+# --
+StatusType::ALLOCATION_ERORR;

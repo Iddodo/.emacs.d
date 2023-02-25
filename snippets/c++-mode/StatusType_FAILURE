@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: StatusType_FAILURE
+# key: failure
+# --
+StatusType::FAILURE;

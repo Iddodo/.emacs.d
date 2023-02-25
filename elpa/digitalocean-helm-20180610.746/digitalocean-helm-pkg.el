@@ -1,0 +1,2 @@
+;;; Generated package description from digitalocean-helm.el  -*- no-byte-compile: t -*-
+(define-package "digitalocean-helm" "20180610.746" "Create and manipulate digitalocean droplets" '((emacs "24.3") (helm "2.5") (digitalocean "0.1")) :commit "b125c9882eded7d73ec109d152b26625f333440b" :authors '(("Oliver Marks" . "oly@digitaloctave.com")) :maintainer '("Oliver Marks" . "oly@digitaloctave.com") :keywords '("processes" "tools") :url "https://gitlab.com/olymk2/digitalocean-api")

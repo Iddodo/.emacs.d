@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: cos-parenthesis
+# key: cos(
+# group: math
+# condition: (and (texmathp) 'auto)
+# --
+\\cos \\left\\{ $1 \\right\\} $0

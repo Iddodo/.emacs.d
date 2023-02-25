@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: otimes
+# key: o*
+# condition: (and (texmathp) 'auto)
+# group: math
+# --
+\otimes

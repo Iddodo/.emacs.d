@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: math-text
+# key: @
+# --
+\text{$0}

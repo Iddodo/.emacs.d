@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: technion-book-template
+# key: template-book
+# --
+\documentclass[english,hebrew]{amsbook}
+
+\usepackage{fontspec}
+\input{~/.config/latex/hebrew-latex.tex}
+
+\begin{document}
+
+$0
+
+\end{document}

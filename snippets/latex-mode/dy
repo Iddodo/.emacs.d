@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: dy
+# key: dy
+# condition: (and (texmathp) 'auto)
+# group: math
+# --
+{\mathrm{d} y}

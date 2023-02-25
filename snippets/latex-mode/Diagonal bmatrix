@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: diagonal
+# key: diag
+# condition: (and (texmathp) 'auto)
+# --
+\diag \left( $0 \right)

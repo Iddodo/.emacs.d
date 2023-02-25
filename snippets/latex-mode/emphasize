@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: emphasize
+# key: e
+# --
+\emph{$0}

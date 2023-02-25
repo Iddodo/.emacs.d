@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: dt
+# key: dt
+# condition: (and (texmathp) 'auto)
+# group: math
+# --
+{\mathrm{d} t}

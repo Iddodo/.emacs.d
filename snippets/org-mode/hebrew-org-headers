@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: hebrew-org-headers
+# key: orgheaders
+# --
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../org-html/style.css" />
+#+HTML_HEAD_EXTRA: <link rel="alternate stylesheet" type="text/css" href="../org-html/style.css" />
+#+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \input{~/.config/latex/hebrew-latex.tex}
+#+STARTUP: latexpreview

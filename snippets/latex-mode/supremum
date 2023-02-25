@@ -1,0 +1,6 @@
+# name: supremum
+# key: sup
+# condition: (and (texmathp) 'auto)
+# group: math
+# --
+\\sup{$1}$0

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: span
+# key: span
+# group: math
+# condition: (and (texmathp) 'auto)
+# --
+\\Span

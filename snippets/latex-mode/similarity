@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: similarity
+# key: sim
+# condition: (and (texmathp) 'auto)
+# --
+\sim

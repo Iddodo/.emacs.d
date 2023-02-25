@@ -1,0 +1,8 @@
+# key: pmat2
+# name: pmatrix (2 x 2)
+# group: math
+# --
+\\begin{pmatrix}
+${1:0} & ${2:$1} \\\\
+${3:$1} & ${4:$1}
+ \\end{pmatrix}

@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: template-org
+# key: template-org
+# --
+#+title: $1
+#+LANGUAGE: he
+#+LATEX_COMPILER: xelatex
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/Users/ido/.config/org/basic-hebrew-style.css" />
+#+HTML_HEAD_EXTRA: <link rel="alternate stylesheet" type="/Users/ido/.config/org/basic-hebrew-style.css" href="" />
+#+LATEX_HEADER: \input{~/.config/latex/hebrew-latex.tex}
+#+STARTUP: latexpreview
+$0

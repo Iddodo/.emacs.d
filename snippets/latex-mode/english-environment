@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: english-environment
+# key: eng
+# --
+\begin{english}
+    $1
+\end{english}
+$0

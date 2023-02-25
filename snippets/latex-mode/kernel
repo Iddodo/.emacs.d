@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: kernel
+# key: ker
+# group: math
+# condition: (and (texmathp) 'auto)
+# --
+\\ker

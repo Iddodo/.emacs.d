@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: double-integral
+# key: iint
+# --
+\\iint\\limits_{$0}

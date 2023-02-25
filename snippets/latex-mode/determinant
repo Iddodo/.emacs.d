@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: determinant
+# key:  det
+# condition: (and (texmathp) 'auto)
+# group: math
+# --
+\\det

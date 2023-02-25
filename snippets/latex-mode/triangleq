@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: triangleq
+# key: treq
+# condition: (and (texmathp) 'auto)
+# group: math
+# --
+\triangleq

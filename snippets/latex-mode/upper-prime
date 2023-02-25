@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: upper-prime
+# key: tag
+# condition: (and (texmathp) 'auto)
+# group: math
+# --
+`(delete-backward-char 1)`^{\prime}

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: hebrew-environment
+# key: heb
+# --
+\begin{hebrew}
+    $1
+\end{hebrew}
+$0

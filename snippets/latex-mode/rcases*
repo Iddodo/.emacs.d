@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: rcases*
+# key: rcases
+# --
+\begin{rcases*}
+$1
+\end{rcases*}

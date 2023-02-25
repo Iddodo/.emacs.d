@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: square-root
+# key: sqrt
+# group: math
+# condition: (and (texmathp) 'auto)
+# --
+\\sqrt{$0}

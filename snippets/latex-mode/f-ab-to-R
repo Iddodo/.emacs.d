@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: f-ab-to-R
+# key: fabtor
+# condition: (and (texmathp) 'auto)
+# --
+f : \left[ a, b \right] \to \mathbb{R}

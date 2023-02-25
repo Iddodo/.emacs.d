@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: bracket-to-R
+# key: abtor
+# condition: (and (texmathp) (quote auto))
+# group: math
+# --
+\left[ a, b \right] \to \mathbb{R}$0

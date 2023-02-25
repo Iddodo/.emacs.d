@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: code
+# key: code
+# --
+
+\begin{english}
+\begin{minted}[bgcolor = minted-bg,
+               frame=lines,
+               framesep=2mm,
+               tabsize=4,
+               obeytabs,
+               showtabs]{${1:c++}}
+
+${2:code$(s-replace "   " "   " yas-text)}
+\end{minted}
+\end{english}
+
+$0

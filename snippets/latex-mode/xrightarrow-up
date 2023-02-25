@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: xrightarrow-up
+# key: arrup
+# group: math
+# --
+\xrightarrow{$0}

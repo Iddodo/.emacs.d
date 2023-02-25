@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: proof
+# key: prf
+# --
+\begin{proof}[\underline{${1:הוכחה}}]
+  $0
+\end{proof}

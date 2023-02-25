@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: StatusType_SUCCESS
+# key: success
+# --
+StatusType::SUCCESS;

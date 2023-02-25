@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: xy-axis
+# key: xyaxis
+# --
+\begin{center}
+\begin{tikzpicture}
+  \draw[->] (-3, 0) -- (4.2, 0) node[right] {$x$};
+  \draw[->] (0, -3) -- (0, 4.2) node[above] {$y$};
+  \draw[scale=0.5, domain=-3:3, smooth, variable=\x] plot ({$1}, {\x*\x});
+\end{tikzpicture}
+\end{center}
+$0

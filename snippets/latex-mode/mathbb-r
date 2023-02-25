@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: mathbb-r
+# key: bbr
+# group: math
+# --
+\mathbb{R}$0

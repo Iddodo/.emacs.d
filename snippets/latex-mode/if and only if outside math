@@ -1,0 +1,5 @@
+# name: if and only if outside math
+# key: miff
+# condition: (quote auto)
+# --
+$\iff$

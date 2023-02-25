@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: tikz-quick-plot
+# key: quick-plot
+# --
+
+\begin{tikzpicture}
+    \begin{axis}[
+        %xmin = -50, xmax = 50,
+        %ymin = -10, ymax = 100,
+        % xtick distance = 2.5,
+        % ytick distance = 0.5,
+        grid = both,
+        minor tick num = 1,
+        major grid style = {lightgray},
+        minor grid style = {lightgray!25},
+        width = \textwidth,
+        height = 0.5\textwidth]
+        \addplot[
+        domain = -900:900,
+        samples = 200,
+        smooth,
+        thick,
+        blue,
+    ] {${1:"plot"$(unless yas/modified-p (read-string "Enter plot:"))}};
+\end{axis}
+\end{tikzpicture}
+$0

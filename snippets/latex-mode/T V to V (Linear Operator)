@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: T V to V (Linear Operator)
+# key: tvtov
+# --
+T: V \to V
